@@ -32,6 +32,20 @@ import org.basinmc.chloramine.manifest.error.MetadataException;
 public interface MetadataDecoder {
 
   /**
+   * Retrieves a metadata decoder capable of de-serializing the specified format revision.
+   *
+   * @param version a format revision.
+   * @return a decoder or, if none accepts the specified revision, an empty optional.
+   */
+  @NonNull
+  static Optional<MetadataDecoder> get(short version) {
+    return ServiceLoader.load(MetadataDecoder.class).stream()
+        .map(Provider::get)
+        .filter((decoder) -> decoder.accepts(version))
+        .findAny();
+  }
+
+  /**
    * Evaluates whether this metadata factory is capable of decoding the supplied format revision.
    *
    * @param version a version number.
@@ -49,18 +63,4 @@ public interface MetadataDecoder {
    */
   @NonNull
   Metadata decode(short version, @NonNull ByteBuffer buffer) throws MetadataException;
-
-  /**
-   * Retrieves a metadata decoder capable of de-serializing the specified format revision.
-   *
-   * @param version a format revision.
-   * @return a decoder or, if none accepts the specified revision, an empty optional.
-   */
-  @NonNull
-  static Optional<MetadataDecoder> get(short version) {
-    return ServiceLoader.load(MetadataDecoder.class).stream()
-        .map(Provider::get)
-        .filter((decoder) -> decoder.accepts(version))
-        .findAny();
-  }
 }
