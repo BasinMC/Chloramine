@@ -17,6 +17,8 @@
 package org.basinmc.chloramine.manifest.error;
 
 /**
+ * Notifies the caller about an issue related to the metadata version (e.g. not supported).
+ *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
 public class MetadataVersionException extends MetadataException {

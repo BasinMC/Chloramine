@@ -17,6 +17,8 @@
 package org.basinmc.chloramine.manifest.error;
 
 /**
+ * Notifies a caller about an issue related to the manifest header section.
+ *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
 public class ManifestHeaderException extends ManifestException {

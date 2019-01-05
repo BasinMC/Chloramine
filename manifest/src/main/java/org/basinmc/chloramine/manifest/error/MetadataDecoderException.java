@@ -17,6 +17,8 @@
 package org.basinmc.chloramine.manifest.error;
 
 /**
+ * Notifies the caller about a decoding issue related to the metadata section.
+ *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
 public class MetadataDecoderException extends MetadataException {
