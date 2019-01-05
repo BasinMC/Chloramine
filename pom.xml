@@ -180,7 +180,9 @@
     </plugins>
   </build>
 
-  <modules></modules>
+  <modules>
+    <module>manifest</module>
+  </modules>
 
   <profiles>
     <profile>
