@@ -17,6 +17,7 @@
 package org.basinmc.chloramine.manifest.metadata;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -211,4 +212,127 @@ public interface Metadata {
    */
   @NonNull
   List<Dependency> getServiceDependencies();
+
+  // TODO: Do not throw if field is unknown?
+  //       Might be reasonable to provide a flag for the caller to choose whether they wish for a
+  //       silent failure or bells and whistles?
+  interface Builder {
+
+    /**
+     * @return a fully built metadata object.
+     * @throws IllegalStateException when a required field has not been passed.
+     */
+    @NonNull
+    Metadata build();
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getProductIdentifier()
+     */
+    @NonNull
+    Builder setProductIdentifier(@NonNull String identifier);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getEnvironmentType()
+     */
+    @NonNull
+    Builder setEnvironmentType(@NonNull String environmentType);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getFlags()
+     */
+    @NonNull
+    Builder setFlags(int flags);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getIdentifier()
+     */
+    @NonNull
+    Builder setIdentifier(@NonNull String identifier);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getDistributionUrl()
+     */
+    @NonNull
+    Builder setDistributionUrl(@NonNull URI distributionUrl);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getDocumentationUrl()
+     */
+    @NonNull
+    Builder setDocumentationUrl(@NonNull URI documentationUrl);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getIssueReportingUrl()
+     */
+    @NonNull
+    Builder setIssueReportingUrl(@NonNull URI issueReportingUrl);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getAuthors()
+     */
+    @NonNull
+    Builder addAuthor(@NonNull String name, @Nullable String alias);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getContributors()
+     */
+    @NonNull
+    Builder addContributor(@NonNull String name, @Nullable String alias);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getServiceDependencies()
+     */
+    @NonNull
+    Builder addService(@NonNull String identifier, @NonNull String version);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getExtensionDependencies()
+     */
+    @NonNull
+    Builder addExtensionDependency(@NonNull String identifier, @NonNull String versionRange,
+        boolean optional);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
+     * @see Metadata#getServiceDependencies()
+     */
+    @NonNull
+    Builder addServiceDependency(@NonNull String identifier, @NonNull String versionRange,
+        boolean optional);
+  }
 }

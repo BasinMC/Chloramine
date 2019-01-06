@@ -17,6 +17,7 @@
 package org.basinmc.chloramine.manifest.metadata.v0;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import org.basinmc.chloramine.manifest.error.MetadataDecoderException;
 import org.basinmc.chloramine.manifest.metadata.AbstractMetadata;
 import org.basinmc.chloramine.manifest.metadata.Author;
 import org.basinmc.chloramine.manifest.metadata.Dependency;
+import org.basinmc.chloramine.manifest.metadata.Metadata;
 import org.basinmc.chloramine.manifest.metadata.Service;
 import org.basinmc.chloramine.manifest.util.DataUtil;
 import org.basinmc.chloramine.manifest.util.MappingUtil;
@@ -284,5 +286,162 @@ public class MetadataV0 extends AbstractMetadata {
             this.distributionUrl, this.documentationUrl, this.issueReportingUrl, this.authors,
             this.contributors,
             this.providedServices, this.extensionDependencies, this.serviceDependencies);
+  }
+
+  public static class Builder implements Metadata.Builder {
+
+    private String productIdentifier;
+    private String environmentType;
+    private int flags;
+
+    private String identifier;
+    private String version;
+
+    private URI distributionUrl;
+    private URI documentationUrl;
+    private URI issueReportingUrl;
+    private final List<AuthorV0> authors = new ArrayList<>();
+    private final List<AuthorV0> contributors = new ArrayList<>();
+
+    private final List<ServiceV0> services = new ArrayList<>();
+    private final List<DependencyV0> extensionDependencies = new ArrayList<>();
+    private final List<DependencyV0> serviceDependencies = new ArrayList<>();
+
+    @NonNull
+    @Override
+    public MetadataV0 build() {
+      return new MetadataV0(
+          (short) 1,
+          this.productIdentifier, this.environmentType, this.flags,
+          this.identifier, this.version,
+          this.distributionUrl, this.documentationUrl, this.issueReportingUrl,
+          this.authors, this.contributors,
+          this.services, this.extensionDependencies, this.serviceDependencies
+      );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder setProductIdentifier(@NonNull String identifier) {
+      this.productIdentifier = identifier;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder setEnvironmentType(@NonNull String environmentType) {
+      this.environmentType = environmentType;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder setFlags(int flags) {
+      this.flags = flags;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder setIdentifier(@NonNull String identifier) {
+      this.identifier = identifier;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder setDistributionUrl(@NonNull URI distributionUrl) {
+      this.distributionUrl = distributionUrl;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder setDocumentationUrl(@NonNull URI documentationUrl) {
+      this.documentationUrl = documentationUrl;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder setIssueReportingUrl(@NonNull URI issueReportingUrl) {
+      this.issueReportingUrl = issueReportingUrl;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder addAuthor(@NonNull String name, @Nullable String alias) {
+      // TODO: Disallow duplicates?
+      this.authors.add(new AuthorV0(name, alias));
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder addContributor(@NonNull String name, @Nullable String alias) {
+      // TODO: Disallow duplicates?
+      this.contributors.add(new AuthorV0(name, alias));
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder addService(@NonNull String identifier, @NonNull String version) {
+      this.services.add(new ServiceV0(identifier, version));
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder addExtensionDependency(@NonNull String identifier,
+        @NonNull String versionRange, boolean optional) {
+      this.extensionDependencies.add(new DependencyV0(identifier, versionRange, optional));
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Builder addServiceDependency(@NonNull String identifier,
+        @NonNull String versionRange, boolean optional) {
+      this.serviceDependencies.add(new DependencyV0(identifier, versionRange, optional));
+      return this;
+    }
   }
 }
