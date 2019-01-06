@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
-public interface Dependency {
+public interface Dependency extends BinarySerializable {
 
   /**
    * <p>Retrieves the product-specific identifier of the target resource.</p>

@@ -67,6 +67,23 @@ public class ServiceV0 implements Service {
    * {@inheritDoc}
    */
   @Override
+  public long getSerializedLength() {
+    return DataUtil.estimateString(this.identifier) + DataUtil.estimateString(this.version);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void serialize(@NonNull ByteBuffer buffer) {
+    DataUtil.writeString(buffer, this.identifier);
+    DataUtil.writeString(buffer, this.version);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

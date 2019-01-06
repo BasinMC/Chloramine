@@ -24,7 +24,7 @@ import java.util.Optional;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
-public interface Author {
+public interface Author extends BinarySerializable {
 
   /**
    * <p>Retrieves the author's display name.</p>

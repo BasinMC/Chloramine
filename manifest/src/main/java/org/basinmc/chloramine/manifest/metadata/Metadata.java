@@ -28,7 +28,7 @@ import java.util.Optional;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
-public interface Metadata {
+public interface Metadata extends BinarySerializable {
 
   /**
    * Identifies an extension which is only privately available (e.g. has been developed for a

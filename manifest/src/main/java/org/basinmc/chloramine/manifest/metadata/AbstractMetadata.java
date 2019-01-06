@@ -16,7 +16,11 @@
  */
 package org.basinmc.chloramine.manifest.metadata;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import java.nio.ByteBuffer;
 import java.util.Objects;
+import org.basinmc.chloramine.manifest.error.ManifestEncoderException;
+import org.basinmc.chloramine.manifest.util.DataUtil;
 
 /**
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
@@ -35,6 +39,22 @@ public abstract class AbstractMetadata implements Metadata {
   @Override
   public short getFormatVersion() {
     return this.formatVersion;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public long getSerializedLength() {
+    return 1;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void serialize(@NonNull ByteBuffer buffer) throws ManifestEncoderException {
+    DataUtil.writeUnsignedShort(buffer, this.formatVersion);
   }
 
   /**

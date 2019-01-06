@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.ToLongFunction;
 
 /**
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
@@ -33,6 +34,10 @@ public final class DataUtil {
   public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
   private DataUtil() {
+  }
+
+  public static long estimateBytes(@Nullable byte[] data) {
+    return 2 + (data != null ? data.length : 0);
   }
 
   @NonNull
@@ -56,6 +61,13 @@ public final class DataUtil {
     }
   }
 
+  public static <V, C extends Collection<V>> long estimateCollection(@NonNull C collection,
+      @NonNull ToLongFunction<V> estimator) {
+    return 2 + collection.stream()
+        .mapToLong(estimator)
+        .sum();
+  }
+
   @NonNull
   public static <V, C extends Collection<V>, E extends Throwable> C readCollection(
       @NonNull ByteBuffer buffer, @NonNull C collection,
@@ -71,6 +83,14 @@ public final class DataUtil {
       @NonNull C collection, @NonNull BiConsumer<ByteBuffer, V> valueEncoder) {
     writeUnsignedShort(buffer, collection.size());
     collection.forEach((value) -> valueEncoder.accept(buffer, value));
+  }
+
+  public static long estimateString(@Nullable String value) {
+    return estimateString(value, DEFAULT_CHARSET);
+  }
+
+  public static long estimateString(@Nullable String value, @NonNull Charset encoding) {
+    return estimateBytes(value != null ? value.getBytes(encoding) : null);
   }
 
   @NonNull

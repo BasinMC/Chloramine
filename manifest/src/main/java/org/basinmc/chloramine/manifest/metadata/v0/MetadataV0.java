@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.basinmc.chloramine.manifest.error.ManifestEncoderException;
 import org.basinmc.chloramine.manifest.error.MetadataDecoderException;
 import org.basinmc.chloramine.manifest.metadata.AbstractMetadata;
 import org.basinmc.chloramine.manifest.metadata.Author;
@@ -243,6 +244,41 @@ public class MetadataV0 extends AbstractMetadata {
   @Override
   public List<Dependency> getServiceDependencies() {
     return Collections.unmodifiableList(this.serviceDependencies);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public long getSerializedLength() {
+    return super.getSerializedLength() + DataUtil.estimateString(this.productIdentifier) +
+        DataUtil.estimateString(this.environmentType) + 2 + DataUtil.estimateString(this.version) +
+        DataUtil.estimateString(Objects.toString(this.distributionUrl, null)) +
+        DataUtil.estimateString(Objects.toString(this.documentationUrl, null)) +
+        DataUtil.estimateString(Objects.toString(this.issueReportingUrl, null)) +
+        DataUtil.estimateCollection(this.authors, AuthorV0::getSerializedLength) +
+        DataUtil.estimateCollection(this.contributors, AuthorV0::getSerializedLength) +
+        DataUtil.estimateCollection(this.providedServices, ServiceV0::getSerializedLength) +
+        DataUtil.estimateCollection(this.extensionDependencies, DependencyV0::getSerializedLength) +
+        DataUtil.estimateCollection(this.serviceDependencies, DependencyV0::getSerializedLength);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void serialize(@NonNull ByteBuffer buffer) throws ManifestEncoderException {
+    super.serialize(buffer);
+    DataUtil.writeString(buffer, this.productIdentifier);
+    DataUtil.writeString(buffer, this.environmentType);
+    DataUtil.writeString(buffer, Objects.toString(this.distributionUrl, null));
+    DataUtil.writeString(buffer, Objects.toString(this.documentationUrl, null));
+    DataUtil.writeString(buffer, Objects.toString(this.issueReportingUrl, null));
+    DataUtil.writeCollection(buffer, this.authors, (b, author) -> author.serialize(b));
+    DataUtil.writeCollection(buffer, this.contributors, (b, author) -> author.serialize(b));
+    DataUtil.writeCollection(buffer, this.providedServices, (b, service) -> service.serialize(b));
+    DataUtil.writeCollection(buffer, this.extensionDependencies, (b, dep) -> dep.serialize(b));
+    DataUtil.writeCollection(buffer, this.serviceDependencies, (b, dep) -> dep.serialize(b));
   }
 
   /**

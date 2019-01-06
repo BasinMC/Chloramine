@@ -17,37 +17,28 @@
 package org.basinmc.chloramine.manifest.metadata;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import java.nio.ByteBuffer;
+import org.basinmc.chloramine.manifest.error.ManifestEncoderException;
 
 /**
- * Represents a provided service implementation.
+ * Provides a base interface for objects which may be serialized into an arbitrary binary format.
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
-public interface Service extends BinarySerializable {
+public interface BinarySerializable {
 
   /**
-   * <p>Retrieves a globally unique identifier for this service implementation.</p>
+   * Retrieves the estimated serialized length of this object (in bytes).
    *
-   * <p>This value is expected to be formatted similarly to a Java class name (e.g. {@code
-   * org.example.project.module.ServiceType}).</p>
-   *
-   * @return a globally unique service identifier.
+   * @return a serialized length.
    */
-  @NonNull
-  String getIdentifier();
+  long getSerializedLength();
 
   /**
-   * <p>Retrieves a service-unique implementation version.</p>
+   * Encodes this object into its binary representation.
    *
-   * <p>This value is expected to the <a href="https://semver.org/">Semantic Versioning</a>
-   * specification in order to provide support for parsing and version ranges within
-   * dependencies.</p>
-   *
-   * <p>Versions are expected to be unique within the namespace of a single service (as denoted
-   * by its identifier).</p>
-   *
-   * @return an implementation version
+   * @param buffer a buffer to serialize into.
+   * @throws ManifestEncoderException when encoding into binary fails.
    */
-  @NonNull
-  String getVersion();
+  void serialize(@NonNull ByteBuffer buffer) throws ManifestEncoderException;
 }

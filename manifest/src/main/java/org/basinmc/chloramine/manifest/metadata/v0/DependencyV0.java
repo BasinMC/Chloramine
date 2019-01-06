@@ -82,6 +82,25 @@ public class DependencyV0 implements Dependency {
    * {@inheritDoc}
    */
   @Override
+  public long getSerializedLength() {
+    return DataUtil.estimateString(this.identifier) + DataUtil.estimateString(this.versionRange)
+        + 1;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void serialize(@NonNull ByteBuffer buffer) {
+    DataUtil.writeString(buffer, this.identifier);
+    DataUtil.writeString(buffer, this.versionRange);
+    buffer.put((byte) (this.optional ? 1 : 0));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

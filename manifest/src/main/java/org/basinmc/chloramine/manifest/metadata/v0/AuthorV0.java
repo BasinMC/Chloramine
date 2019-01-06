@@ -68,6 +68,23 @@ public class AuthorV0 implements Author {
    * {@inheritDoc}
    */
   @Override
+  public long getSerializedLength() {
+    return DataUtil.estimateString(this.name) + DataUtil.estimateString(this.alias);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void serialize(@NonNull ByteBuffer buffer) {
+    DataUtil.writeString(buffer, this.name);
+    DataUtil.writeString(buffer, this.alias);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

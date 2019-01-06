@@ -19,18 +19,23 @@ package org.basinmc.chloramine.manifest;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.nio.ByteBuffer;
 import java.util.Objects;
+import java.util.function.Consumer;
+import org.basinmc.chloramine.manifest.error.ManifestEncoderException;
 import org.basinmc.chloramine.manifest.error.ManifestException;
 import org.basinmc.chloramine.manifest.error.ManifestHeaderException;
 import org.basinmc.chloramine.manifest.error.MetadataVersionException;
+import org.basinmc.chloramine.manifest.metadata.BinarySerializable;
 import org.basinmc.chloramine.manifest.metadata.Metadata;
+import org.basinmc.chloramine.manifest.metadata.MetadataBuilderFactory;
 import org.basinmc.chloramine.manifest.metadata.MetadataDecoder;
+import org.basinmc.chloramine.manifest.util.DataUtil;
 
 /**
  * Represents an extension container manifest.
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
-public class Manifest {
+public class Manifest implements BinarySerializable {
 
   /**
    * Defines the magic number which is prepended to all extension containers.
@@ -86,6 +91,13 @@ public class Manifest {
         .decode(metadataVersion, metadataBuffer);
   }
 
+  public Manifest(int flags, Metadata metadata, long contentOffset, long contentLength) {
+    this.flags = flags;
+    this.metadata = metadata;
+    this.contentOffset = contentOffset;
+    this.contentLength = contentLength;
+  }
+
   /**
    * <p>Retrieves a set of metadata flags which expose additional container information.</p>
    *
@@ -131,6 +143,27 @@ public class Manifest {
    * {@inheritDoc}
    */
   @Override
+  public long getSerializedLength() {
+    return HEADER_LENGTH + this.metadata.getSerializedLength();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void serialize(@NonNull ByteBuffer buffer) throws ManifestEncoderException {
+    buffer.putInt(MAGIC_NUMBER);
+    DataUtil.writeUnsignedShort(buffer, this.flags);
+    buffer.putLong(0); // TODO: Authentication
+    buffer.putLong(this.metadata.getSerializedLength());
+    buffer.putLong(this.contentLength);
+    this.metadata.serialize(buffer);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -151,5 +184,78 @@ public class Manifest {
   @Override
   public int hashCode() {
     return Objects.hash(this.flags, this.metadata, this.contentOffset, this.contentLength);
+  }
+
+  /**
+   * Provides a factory for arbitrary manifest POJOs.
+   */
+  public static class Builder {
+
+    private int flags;
+    private Metadata metadata;
+    private long contentLength;
+
+    @NonNull
+    public Manifest build() {
+      if (this.metadata == null) {
+        throw new IllegalStateException("Missing manifest section: metadata");
+      }
+
+      return new Manifest(
+          this.flags,
+          this.metadata,
+          HEADER_LENGTH + this.metadata.getSerializedLength(),
+          this.contentLength
+      );
+    }
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid.
+     * @see Manifest#getFlags()
+     */
+    @NonNull
+    public Builder setFlags(int flags) {
+      this.flags = flags;
+      return this;
+    }
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid.
+     * @see Manifest#getMetadata()
+     */
+    @NonNull
+    public Builder setMetadata(@NonNull Metadata metadata) {
+      this.metadata = metadata;
+      return this;
+    }
+
+    /**
+     * Creates a new builder for the specified metadata version and passes it to a custom factory
+     * method for configuration.
+     *
+     * @param version an arbitrary metadata version.
+     * @param metadataFactory a metadata factory.
+     * @throws UnsupportedOperationException when the specified metadata version is unsupported.
+     */
+    @NonNull
+    public Builder createMetadata(short version,
+        @NonNull Consumer<Metadata.Builder> metadataFactory) {
+      var builder = MetadataBuilderFactory.get(version)
+          .orElseThrow(() -> new UnsupportedOperationException(
+              "Unsupported metadata format version: " + version))
+          .newBuilder(version);
+      metadataFactory.accept(builder);
+      return this.setMetadata(builder.build());
+    }
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid.
+     * @see Manifest#getContentLength()
+     */
+    @NonNull
+    public Builder setContentLength(long contentLength) {
+      this.contentLength = contentLength;
+      return this;
+    }
   }
 }
