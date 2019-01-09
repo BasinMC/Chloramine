@@ -17,7 +17,11 @@
 package org.basinmc.chloramine.manifest;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.function.Consumer;
 import org.basinmc.chloramine.manifest.error.ManifestEncoderException;
@@ -137,6 +141,29 @@ public class Manifest implements BinarySerializable {
    */
   public long getContentLength() {
     return this.contentLength;
+  }
+
+  /**
+   * Decorates a passed file with this manifest header.
+   *
+   * @param inputFile an arbitrary input file (typically an archive such as a Jar or executable
+   * file).
+   * @param outputFile an output file path.
+   * @throws IOException when writing to the target file or reading from the input file fails.
+   * @throws ManifestEncoderException when encoding the manifest fails.
+   */
+  public void decorate(@NonNull Path inputFile, @NonNull Path outputFile)
+      throws IOException, ManifestEncoderException {
+    var manifestBuffer = ByteBuffer.allocate((int) this.getSerializedLength());
+    this.serialize(manifestBuffer);
+    manifestBuffer.flip();
+
+    try (var outputChannel = FileChannel.open(outputFile, StandardOpenOption.CREATE,
+        StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+        var inputChannel = FileChannel.open(inputFile, StandardOpenOption.READ)) {
+      outputChannel.write(manifestBuffer);
+      inputChannel.transferTo(0, Long.MAX_VALUE, outputChannel);
+    }
   }
 
   /**
