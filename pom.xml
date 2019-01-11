@@ -64,8 +64,8 @@
 
   <scm>
     <url>https://github.com/BasinMC/Chloramine</url>
-    <connection>https://github.com/BasinMC/Chloramine.git</connection>
-    <developerConnection>git@github.com:BasinMC/Chloramine.git</developerConnection>
+    <connection>scm:git:https://github.com/BasinMC/Chloramine.git</connection>
+    <developerConnection>scm:git:git://github.com/BasinMC/Chloramine.git</developerConnection>
   </scm>
 
   <issueManagement>
