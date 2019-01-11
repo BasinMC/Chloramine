@@ -265,6 +265,15 @@ public interface Metadata extends BinarySerializable {
      * @throws IllegalArgumentException when the specified value is invalid
      * @throws UnsupportedOperationException when this field is not supported by the format
      * revision
+     * @see Metadata#getVersion()
+     */
+    @NonNull
+    Builder setVersion(@NonNull String version);
+
+    /**
+     * @throws IllegalArgumentException when the specified value is invalid
+     * @throws UnsupportedOperationException when this field is not supported by the format
+     * revision
      * @see Metadata#getDistributionUrl()
      */
     @NonNull

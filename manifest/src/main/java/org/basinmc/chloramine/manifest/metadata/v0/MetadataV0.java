@@ -401,6 +401,16 @@ public class MetadataV0 extends AbstractMetadata {
      */
     @NonNull
     @Override
+    public Metadata.Builder setVersion(@NonNull String version) {
+      this.version = version;
+      return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
     public Builder setDistributionUrl(@NonNull URI distributionUrl) {
       this.distributionUrl = distributionUrl;
       return this;
