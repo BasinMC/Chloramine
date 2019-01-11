@@ -50,6 +50,7 @@ public class InfoCommand extends AbstractContainerCommand {
           .println(String.format("Estimated Size: %,d byte(s)", manifest.getSerializedLength()));
       System.out.println(String.format("Container Flags: 0x%04X", manifest.getFlags()));
       System.out.println(String.format("Content Length: %,d byte(s)", manifest.getContentLength()));
+      System.out.println();
 
       var metadata = manifest.getMetadata();
       System.out
