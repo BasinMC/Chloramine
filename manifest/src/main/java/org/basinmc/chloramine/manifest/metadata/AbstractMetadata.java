@@ -54,7 +54,7 @@ public abstract class AbstractMetadata implements Metadata {
    */
   @Override
   public void serialize(@NonNull ByteBuffer buffer) throws ManifestEncoderException {
-    DataUtil.writeUnsignedShort(buffer, this.formatVersion);
+    DataUtil.writeUnsignedByte(buffer, this.formatVersion);
   }
 
   /**
