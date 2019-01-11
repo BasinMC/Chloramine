@@ -22,6 +22,7 @@ import org.basinmc.chloramine.cli.commands.CommandHandler;
 import org.basinmc.chloramine.cli.commands.HelpCommand;
 import org.basinmc.chloramine.cli.commands.InfoCommand;
 import org.basinmc.chloramine.cli.commands.VersionCommand;
+import org.basinmc.chloramine.cli.commands.WrapCommand;
 import org.fusesource.jansi.AnsiConsole;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -36,7 +37,8 @@ import picocli.CommandLine.UnmatchedArgumentException;
     subcommands = {
         HelpCommand.class,
         InfoCommand.class,
-        VersionCommand.class
+        VersionCommand.class,
+        WrapCommand.class
     }
 )
 public class Chloramine {
