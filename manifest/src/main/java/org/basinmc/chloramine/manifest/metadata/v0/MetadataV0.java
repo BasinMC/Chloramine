@@ -252,7 +252,10 @@ public class MetadataV0 extends AbstractMetadata {
   @Override
   public long getSerializedLength() {
     return super.getSerializedLength() + DataUtil.estimateString(this.productIdentifier) +
-        DataUtil.estimateString(this.environmentType) + 2 + DataUtil.estimateString(this.version) +
+        DataUtil.estimateString(this.environmentType) +
+        2 +
+        DataUtil.estimateString(this.identifier) +
+        DataUtil.estimateString(this.version) +
         DataUtil.estimateString(Objects.toString(this.distributionUrl, null)) +
         DataUtil.estimateString(Objects.toString(this.documentationUrl, null)) +
         DataUtil.estimateString(Objects.toString(this.issueReportingUrl, null)) +
@@ -271,6 +274,9 @@ public class MetadataV0 extends AbstractMetadata {
     super.serialize(buffer);
     DataUtil.writeString(buffer, this.productIdentifier);
     DataUtil.writeString(buffer, this.environmentType);
+    DataUtil.writeUnsignedShort(buffer, this.flags);
+    DataUtil.writeString(buffer, this.identifier);
+    DataUtil.writeString(buffer, this.version);
     DataUtil.writeString(buffer, Objects.toString(this.distributionUrl, null));
     DataUtil.writeString(buffer, Objects.toString(this.documentationUrl, null));
     DataUtil.writeString(buffer, Objects.toString(this.issueReportingUrl, null));
