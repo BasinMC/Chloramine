@@ -84,6 +84,14 @@ public class ServiceV0 implements Service {
    * {@inheritDoc}
    */
   @Override
+  public String toString() {
+    return this.identifier + ":" + this.version;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

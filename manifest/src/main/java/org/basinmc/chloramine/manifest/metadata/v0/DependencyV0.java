@@ -101,6 +101,22 @@ public class DependencyV0 implements Dependency {
    * {@inheritDoc}
    */
   @Override
+  public String toString() {
+    var builder = new StringBuilder();
+    if (!this.optional) {
+      builder.append("!");
+    }
+
+    builder.append(this.identifier);
+    builder.append(" (").append(this.versionRange).append(")");
+
+    return builder.toString();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

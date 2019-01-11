@@ -85,6 +85,18 @@ public class AuthorV0 implements Author {
    * {@inheritDoc}
    */
   @Override
+  public String toString() {
+    if (this.alias == null) {
+      return this.name;
+    }
+
+    return this.name + " (" + this.alias + ")";
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
