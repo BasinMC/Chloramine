@@ -104,6 +104,11 @@ public class Manifest implements BinarySerializable {
     this.contentLength = contentLength;
   }
 
+  @NonNull
+  public static Builder builder() {
+    return new Builder();
+  }
+
   /**
    * Reads a manifest from the specified channel.
    *
