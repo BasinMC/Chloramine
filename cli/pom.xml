@@ -37,6 +37,11 @@
   <!-- Dependencies -->
   <dependencies>
     <dependency>
+      <groupId>org.basinmc.chloramine</groupId>
+      <artifactId>manifest</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
     </dependency>

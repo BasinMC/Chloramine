@@ -17,9 +17,11 @@
 package org.basinmc.chloramine.manifest;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Objects;
@@ -100,6 +102,57 @@ public class Manifest implements BinarySerializable {
     this.metadata = metadata;
     this.contentOffset = contentOffset;
     this.contentLength = contentLength;
+  }
+
+  /**
+   * Reads a manifest from the specified channel.
+   *
+   * @param channel an arbitrary input channel.
+   * @return a manifest.
+   * @throws IOException when an error occurs while reading the manifest data.
+   * @throws ManifestException when the manifest is malformed.
+   */
+  @NonNull
+  public static Manifest read(@NonNull ReadableByteChannel channel)
+      throws IOException, ManifestException {
+    var headerBuffer = ByteBuffer.allocate(HEADER_LENGTH);
+    if (channel.read(headerBuffer) == -1) {
+      throw new EOFException("Channel contains insufficient data");
+    }
+
+    var magicNumber = headerBuffer.getInt();
+    if (magicNumber != MAGIC_NUMBER) {
+      throw new ManifestHeaderException(String.format("Illegal magic number: 0x%08X", magicNumber));
+    }
+
+    headerBuffer.position(headerBuffer.position() + 2);
+    var length = headerBuffer.getLong() + headerBuffer.getLong();
+
+    if (length > Integer.MAX_VALUE) {
+      throw new ManifestHeaderException(String.format(
+          "Illegal header: Section exceeds maximum length (%d bytes > %d)",
+          length, Integer.MAX_VALUE));
+    }
+
+    headerBuffer.rewind();
+
+    var buffer = ByteBuffer.allocate((int) (HEADER_LENGTH + length));
+    buffer.put(headerBuffer);
+    if (channel.read(buffer) == -1) {
+      throw new EOFException("Channel contains insufficient data");
+    }
+
+    return new Manifest(buffer);
+  }
+
+  /**
+   * @see #read(ReadableByteChannel)
+   */
+  @NonNull
+  public static Manifest read(@NonNull Path path) throws IOException, ManifestException {
+    try (var channel = FileChannel.open(path, StandardOpenOption.READ)) {
+      return read(channel);
+    }
   }
 
   /**
