@@ -347,7 +347,7 @@ public class MetadataV0 extends AbstractMetadata {
     @Override
     public MetadataV0 build() {
       return new MetadataV0(
-          (short) 1,
+          (short) 0,
           this.productIdentifier, this.environmentType, this.flags,
           this.identifier, this.version,
           this.distributionUrl, this.documentationUrl, this.issueReportingUrl,

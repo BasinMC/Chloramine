@@ -30,7 +30,7 @@ public class MetadataBuilderFactoryV0 implements MetadataBuilderFactory {
    */
   @Override
   public boolean accepts(short version) {
-    return version == 1;
+    return version == 0;
   }
 
   /**
