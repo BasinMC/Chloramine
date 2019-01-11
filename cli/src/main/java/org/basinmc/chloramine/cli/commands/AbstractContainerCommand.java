@@ -27,5 +27,5 @@ import picocli.CommandLine.Parameters;
 public abstract class AbstractContainerCommand implements CommandHandler {
 
   @Parameters(paramLabel = "container-file", description = "Path to a container file")
-  private Path containerPath;
+  protected Path containerPath;
 }
