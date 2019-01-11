@@ -83,14 +83,11 @@ public class Manifest implements BinarySerializable {
           metadataLength, Integer.MAX_VALUE));
     }
 
-    // TODO: Add support for the authentication section once documented
-    buffer.position(buffer.position() + (int) authenticationLength);
-
     var metadataBuffer = ByteBuffer.allocate((int) metadataLength);
     metadataBuffer.put(buffer);
     metadataBuffer.flip();
 
-    var metadataVersion = buffer.get();
+    var metadataVersion = metadataBuffer.get();
     this.metadata = MetadataDecoder.get(metadataVersion)
         .orElseThrow(() -> new MetadataVersionException(
             "Unsupported metadata format version: " + metadataVersion))
@@ -124,6 +121,7 @@ public class Manifest implements BinarySerializable {
     if (channel.read(headerBuffer) == -1) {
       throw new EOFException("Channel contains insufficient data");
     }
+    headerBuffer.flip();
 
     var magicNumber = headerBuffer.getInt();
     if (magicNumber != MAGIC_NUMBER) {
@@ -146,6 +144,7 @@ public class Manifest implements BinarySerializable {
     if (channel.read(buffer) == -1) {
       throw new EOFException("Channel contains insufficient data");
     }
+    buffer.flip();
 
     return new Manifest(buffer);
   }
