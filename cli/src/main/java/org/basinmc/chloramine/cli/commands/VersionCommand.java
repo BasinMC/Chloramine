@@ -51,7 +51,7 @@ public class VersionCommand implements CommandHandler {
 
       var versionBuilder = new StringBuilder(this.versionNumber);
       if (!"dev".equals(this.commitHash)) {
-        versionBuilder.append("+git-").append(this.commitHash);
+        versionBuilder.append("+git-").append(this.commitHash.substring(0, 7));
       } else {
         versionBuilder.append("+dev");
       }
