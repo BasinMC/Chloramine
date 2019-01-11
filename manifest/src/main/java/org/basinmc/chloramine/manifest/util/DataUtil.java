@@ -113,6 +113,18 @@ public final class DataUtil {
     writeBytes(buffer, value != null ? value.getBytes(encoding) : null);
   }
 
+  public static short readUnsignedByte(@NonNull ByteBuffer buffer) {
+    return (short) (buffer.get() & 0xFF);
+  }
+
+  public static void writeUnsignedByte(@NonNull ByteBuffer buffer, short value) {
+    if (value > 256) {
+      throw new IllegalArgumentException("Value exceeds field bounds: " + value);
+    }
+
+    buffer.put((byte) (value & 0xFF));
+  }
+
   public static int readUnsignedShort(@NonNull ByteBuffer buffer) {
     return buffer.getShort() & 0xFFFF;
   }
