@@ -58,6 +58,8 @@
 
   <!-- Build Settings -->
   <build>
+    <finalName>chloramine</finalName>
+
     <resources>
       <resource>
         <directory>${project.basedir}/src/main/resources</directory>
