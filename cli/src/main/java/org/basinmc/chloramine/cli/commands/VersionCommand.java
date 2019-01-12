@@ -50,7 +50,7 @@ public class VersionCommand implements CommandHandler {
       this.ciJobNumber = metadata.getProperty("application.ciJobNumber");
 
       var versionBuilder = new StringBuilder(this.versionNumber);
-      if (!"dev".equals(this.commitHash)) {
+      if (!"dev".equals(this.commitHash) && !this.commitHash.isEmpty()) {
         versionBuilder.append("+git-").append(this.commitHash.substring(0, 7));
       } else {
         versionBuilder.append("+dev");
