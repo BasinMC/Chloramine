@@ -118,7 +118,7 @@ public final class DataUtil {
   }
 
   public static void writeUnsignedByte(@NonNull ByteBuffer buffer, short value) {
-    if (value > 256) {
+    if (value < 0 || value > 256) {
       throw new IllegalArgumentException("Value exceeds field bounds: " + value);
     }
 
@@ -130,7 +130,7 @@ public final class DataUtil {
   }
 
   public static void writeUnsignedShort(@NonNull ByteBuffer buffer, int value) {
-    if (value >= 65536) {
+    if (value < 0 || value >= 65536) {
       throw new IllegalArgumentException("Value exceeds field bounds: " + value);
     }
 
