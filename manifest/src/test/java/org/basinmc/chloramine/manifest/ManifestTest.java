@@ -57,9 +57,9 @@ public class ManifestTest {
 
       assertEquals("org.basinmc.test", metadata.getIdentifier());
       assertEquals("1.2.3", metadata.getVersion());
-      assertTrue(metadata.getDistributionUrl().isEmpty());
-      assertTrue(metadata.getDocumentationUrl().isEmpty());
-      assertTrue(metadata.getIssueReportingUrl().isEmpty());
+      assertFalse(metadata.getDistributionUrl().isPresent());
+      assertFalse(metadata.getDocumentationUrl().isPresent());
+      assertFalse(metadata.getIssueReportingUrl().isPresent());
       assertTrue(metadata.getAuthors().isEmpty());
       assertTrue(metadata.getContributors().isEmpty());
 

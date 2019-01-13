@@ -30,7 +30,7 @@ public final class MappingUtil {
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
   public static <I, O, E extends Throwable> Optional<O> map(@NonNull Optional<I> in,
       @NonNull ThrowingFunction<I, O, E> conversionFunction) throws E {
-    if (in.isEmpty()) {
+    if (!in.isPresent()) {
       return Optional.empty();
     }
 
