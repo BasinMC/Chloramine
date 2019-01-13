@@ -130,16 +130,16 @@ public class ManifestTest {
             .equals(service.getVersion())));
     assertTrue(metadata.getExtensionDependencies().stream().anyMatch(
         (ext) -> "org.basinmc.stuff".equals(ext.getIdentifier()) && "(1.0.0,2.0.0]"
-            .equals(ext.getVersionRange())));
+            .equals(ext.getVersionRange()) && !ext.isOptional()));
     assertTrue(metadata.getExtensionDependencies().stream().anyMatch(
         (ext) -> "org.basinmc.things".equals(ext.getIdentifier()) && "[1.0.0,2.1.0]"
-            .equals(ext.getVersionRange())));
+            .equals(ext.getVersionRange()) && ext.isOptional()));
     assertTrue(metadata.getServiceDependencies().stream().anyMatch(
         (service) -> "org.basinmc.beans".equals(service.getIdentifier()) && "(1.0.0,2.0.0]"
-            .equals(service.getVersionRange())));
+            .equals(service.getVersionRange()) && !service.isOptional()));
     assertTrue(metadata.getServiceDependencies().stream().anyMatch(
         (service) -> "org.basinmc.croquettes".equals(service.getIdentifier()) && "[1.0.0,2.1.0]"
-            .equals(service.getVersionRange())));
+            .equals(service.getVersionRange()) && service.isOptional()));
 
     assertTrue(manifest.getSerializedLength() < Integer.MAX_VALUE);
     var buffer = ByteBuffer.allocate((int) manifest.getSerializedLength());
